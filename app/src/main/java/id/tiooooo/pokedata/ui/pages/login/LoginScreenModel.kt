@@ -1,54 +1,62 @@
 package id.tiooooo.pokedata.ui.pages.login
 
-import cafe.adriel.voyager.core.model.ScreenModel
-import cafe.adriel.voyager.core.model.screenModelScope
-import id.tiooooo.pokedata.data.implementation.local.entity.UserEntity
-import id.tiooooo.pokedata.data.implementation.repository.UserTempRepository
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
+import id.tiooooo.pokedata.base.BaseScreenModel
+import id.tiooooo.pokedata.data.api.repository.UserRepository
 
 class LoginScreenModel(
-    private val userTempRepository: UserTempRepository,
-) : ScreenModel {
+    private val userRepository: UserRepository,
+) : BaseScreenModel<LoginState, LoginIntent, LoginEffect>(
+    initialState = LoginState()
+) {
+    override fun reducer(state: LoginState, intent: LoginIntent): LoginState {
+        return when (intent) {
+            is LoginIntent.UpdateEmail -> {
+                validateButton()
+                state.copy(email = intent.value)
+            }
 
-    private val _userList = MutableStateFlow<List<UserEntity>>(emptyList())
-    val userList = _userList.asStateFlow()
+            is LoginIntent.UpdatePassword -> {
+                validateButton()
+                state.copy(password = intent.value)
+            }
 
-    private val _state = MutableStateFlow(LoginState())
-    val state = _state.asStateFlow()
-
-
-    fun executeUsers() {
-        screenModelScope.launch {
-//            _userList.value = data
+            is LoginIntent.ExecuteLogin -> state.copy(isLoading = true, error = null)
+            is LoginIntent.NavigateToRegister -> state
         }
     }
 
-    fun executeLogin(email: String, password: String) {
-        screenModelScope.launch {
-            _state.update { it.copy(isLoading = true, errorMessage = null, isLoginSuccess = false) }
+    private fun validateButton() {
+        val currentState = state.value
+        if (currentState.email.isEmpty() && currentState.password.isEmpty()) {
+            setState { currentState.copy(isButtonEnable = false) }
+        }
+        setState { currentState.copy(isButtonEnable = true) }
+    }
 
-            val user = userTempRepository.login(email, password)
+    override suspend fun handleIntentSideEffect(intent: LoginIntent) {
+        when (intent) {
+            is LoginIntent.ExecuteLogin -> {
+                val email = state.value.email.trim()
+                val password = state.value.password.trim()
 
-            if (user != null) {
-                _state.update { it.copy(isLoading = false, isLoginSuccess = true) }
-            } else {
-                _state.update {
-                    it.copy(
-                        isLoading = false,
-                        errorMessage = "Email atau password salah",
-                    )
+                userRepository.executeLogin(email, password).collect { isUserFound ->
+                    if (isUserFound) {
+                        sendEffect(LoginEffect.NavigateToHome)
+                    }
+                    else setState {
+                        it.copy(
+                            isLoading = false,
+                            error = "Email atau password salah"
+                        )
+                    }
                 }
             }
+
+            is LoginIntent.NavigateToRegister -> {
+                sendEffect(LoginEffect.NavigateToRegister)
+            }
+
+            else -> Unit
         }
     }
-
 }
-
-data class LoginState(
-    val isLoading: Boolean = false,
-    val errorMessage: String? = null,
-    val isLoginSuccess: Boolean = false
-)
