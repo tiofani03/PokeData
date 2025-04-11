@@ -1,7 +1,7 @@
 package id.tiooooo.pokedata
 
 import android.app.Application
-import id.tiooooo.pokedata.di.databaseModule
+import id.tiooooo.pokedata.di.localModule
 import id.tiooooo.pokedata.di.networkModule
 import id.tiooooo.pokedata.di.repositoryModule
 import id.tiooooo.pokedata.di.screenModelModule
@@ -15,7 +15,7 @@ class PokeDataApp : Application() {
             androidContext(this@PokeDataApp)
             modules(
                 listOf(
-                    databaseModule,
+                    localModule,
                     networkModule,
                     repositoryModule,
                     screenModelModule,

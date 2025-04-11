@@ -1,6 +1,7 @@
 package id.tiooooo.pokedata.di
 
 import id.tiooooo.pokedata.data.implementation.remote.service.PokeService
+import id.tiooooo.pokedata.utils.AppConstants.BASE_URL
 import okhttp3.OkHttpClient
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -14,7 +15,7 @@ val networkModule = module {
 
     single {
         Retrofit.Builder()
-            .baseUrl("https://pokeapi.co/")
+            .baseUrl(BASE_URL)
             .client(get())
             .addConverterFactory(GsonConverterFactory.create())
             .build()

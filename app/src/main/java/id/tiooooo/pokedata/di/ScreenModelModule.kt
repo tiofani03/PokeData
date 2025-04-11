@@ -6,7 +6,7 @@ import id.tiooooo.pokedata.ui.pages.splash.SplashScreenModel
 import org.koin.dsl.module
 
 val screenModelModule = module {
-    single { SplashScreenModel(get(), get()) }
+    single { SplashScreenModel(get()) }
     single { LoginScreenModel(get()) }
     single { RegisterScreenModel(get()) }
 }
