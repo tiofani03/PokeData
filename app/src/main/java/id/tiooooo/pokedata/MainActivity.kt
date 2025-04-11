@@ -7,7 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.NavigatorDisposeBehavior
 import cafe.adriel.voyager.transitions.SlideTransition
-import id.tiooooo.pokedata.ui.pages.login.LoginRoute
+import id.tiooooo.pokedata.ui.pages.splash.SplashRoute
 import id.tiooooo.pokedata.ui.theme.PokeDataTheme
 
 class MainActivity : ComponentActivity() {
@@ -17,7 +17,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             PokeDataTheme {
                 Navigator(
-                    screen = LoginRoute(),
+                    screen = SplashRoute(),
                     disposeBehavior = NavigatorDisposeBehavior(),
                     onBackPressed = { true },
                 ) { navigator ->

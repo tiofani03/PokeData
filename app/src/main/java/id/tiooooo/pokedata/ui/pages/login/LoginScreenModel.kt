@@ -3,15 +3,14 @@ package id.tiooooo.pokedata.ui.pages.login
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import id.tiooooo.pokedata.data.implementation.local.entity.UserEntity
-import id.tiooooo.pokedata.data.implementation.repository.UserRepository
-import id.tiooooo.pokedata.ui.pages.splash.toNonNullList
+import id.tiooooo.pokedata.data.implementation.repository.UserTempRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class LoginScreenModel(
-    private val userRepository: UserRepository,
+    private val userTempRepository: UserTempRepository,
 ) : ScreenModel {
 
     private val _userList = MutableStateFlow<List<UserEntity>>(emptyList())
@@ -23,8 +22,7 @@ class LoginScreenModel(
 
     fun executeUsers() {
         screenModelScope.launch {
-            val data = userRepository.getUsers()?.toNonNullList().orEmpty()
-            _userList.value = data
+//            _userList.value = data
         }
     }
 
@@ -32,7 +30,7 @@ class LoginScreenModel(
         screenModelScope.launch {
             _state.update { it.copy(isLoading = true, errorMessage = null, isLoginSuccess = false) }
 
-            val user = userRepository.login(email, password)
+            val user = userTempRepository.login(email, password)
 
             if (user != null) {
                 _state.update { it.copy(isLoading = false, isLoginSuccess = true) }

@@ -3,7 +3,7 @@ package id.tiooooo.pokedata.ui.pages.register
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import id.tiooooo.pokedata.data.implementation.local.entity.UserEntity
-import id.tiooooo.pokedata.data.implementation.repository.UserRepository
+import id.tiooooo.pokedata.data.implementation.repository.UserTempRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import java.util.UUID
 
 class RegisterScreenModel(
-    private val userRepository: UserRepository
+    private val userTempRepository: UserTempRepository
 ) : ScreenModel {
 
     private val _state = MutableStateFlow(RegisterState())
@@ -56,7 +56,7 @@ class RegisterScreenModel(
         screenModelScope.launch {
             _state.update { it.copy(isLoading = true, errorMessage = null, isButtonEnable = false) }
 
-            val isEmailUsed = userRepository.getUserByEmail(current.email)
+            val isEmailUsed = userTempRepository.getUserByEmail(current.email)
             if (isEmailUsed != null) {
                 _state.update {
                     it.copy(
@@ -76,7 +76,7 @@ class RegisterScreenModel(
                     password = current.password,
                     username = "Pikachu"
                 )
-                userRepository.register(userEntity)
+                userTempRepository.register(userEntity)
                 _state.update { it.copy(isLoading = false, isButtonEnable = true) }
                 _effect.emit(RegisterEffect.NavigateToLogin)
 

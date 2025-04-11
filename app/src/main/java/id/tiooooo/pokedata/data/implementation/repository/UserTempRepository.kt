@@ -3,7 +3,7 @@ package id.tiooooo.pokedata.data.implementation.repository
 import id.tiooooo.pokedata.data.implementation.local.dao.UserDao
 import id.tiooooo.pokedata.data.implementation.local.entity.UserEntity
 
-class UserRepository(
+class UserTempRepository(
     private val userDao: UserDao,
 ) {
     suspend fun register(user: UserEntity) {

@@ -6,18 +6,18 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,7 +37,16 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import coil.compose.AsyncImage
 import id.tiooooo.pokedata.R
+import id.tiooooo.pokedata.base.BaseScaffold
+import id.tiooooo.pokedata.ui.component.AnimatedPreloader
 import id.tiooooo.pokedata.ui.pages.login.LoginRoute
+import id.tiooooo.pokedata.ui.pages.register.RegisterRoute
+import id.tiooooo.pokedata.ui.theme.EXTRA_LARGE_PADDING
+import id.tiooooo.pokedata.ui.theme.MEDIUM_PADDING
+import id.tiooooo.pokedata.ui.theme.SMALL_PADDING
+import id.tiooooo.pokedata.ui.theme.textMedium12
+import id.tiooooo.pokedata.ui.theme.textMedium20
+import id.tiooooo.pokedata.utils.AppConstants
 import id.tiooooo.pokedata.utils.ColorCache
 import id.tiooooo.pokedata.utils.PaletteGenerator
 
@@ -46,12 +55,80 @@ fun SplashScreen(
     modifier: Modifier = Modifier,
     screenModel: SplashScreenModel
 ) {
-    val userList by screenModel.pokemonList.collectAsState()
     val navigator = LocalNavigator.currentOrThrow
 
     LaunchedEffect(Unit) {
-        screenModel.executeUsers()
+        screenModel.dispatch(SplashIntent.CheckLogin)
+        screenModel.effect.collect { effect ->
+            when (effect) {
+                SplashEffect.NavigateToHome -> navigator.replaceAll(RegisterRoute())
+                SplashEffect.NavigateToLogin -> navigator.replaceAll(LoginRoute())
+            }
+        }
     }
+
+    BaseScaffold { paddingValues ->
+        Box(
+            modifier = modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.Center)
+                    .padding(bottom = MEDIUM_PADDING),
+            ) {
+                AnimatedPreloader(
+                    modifier = Modifier
+                        .size(225.dp)
+                        .align(Alignment.CenterHorizontally),
+                    animationRes = R.raw.pika_run,
+                )
+                Text(
+                    modifier = Modifier
+                        .wrapContentWidth()
+                        .padding(
+                            vertical = SMALL_PADDING,
+                            horizontal = EXTRA_LARGE_PADDING,
+                        )
+                        .align(Alignment.CenterHorizontally),
+                    text = stringResource(R.string.app_name),
+                    style = textMedium20().copy(
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White,
+                    )
+                )
+                Text(
+                    modifier = Modifier
+                        .wrapContentWidth()
+                        .padding(horizontal = EXTRA_LARGE_PADDING)
+                        .align(Alignment.CenterHorizontally),
+                    text = stringResource(R.string.text_splash_subtitle),
+                    style = textMedium12().copy(
+                        fontWeight = FontWeight.Light,
+                        color = Color.White,
+                    )
+                )
+            }
+
+            Text(
+                modifier = Modifier
+                    .wrapContentWidth()
+                    .padding(bottom = paddingValues.calculateBottomPadding() + MEDIUM_PADDING)
+                    .align(Alignment.BottomCenter),
+                text = "Versi ${AppConstants.APP_VERSION}",
+                style = textMedium12().copy(
+                    fontWeight = FontWeight.Normal,
+                    color = Color.White,
+                )
+            )
+        }
+    }
+}
+
+
+@Composable
+fun TestPurpose(modifier: Modifier = Modifier) {
     Box(modifier = modifier) {
         Column(
             modifier = Modifier,
@@ -66,7 +143,7 @@ fun SplashScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
-                onClick = { navigator.replace(LoginRoute()) }
+                onClick = { }
             ) {
                 Text(
                     text = "Buat akun ngawur"
@@ -76,28 +153,27 @@ fun SplashScreen(
                 columns = GridCells.Fixed(2),
                 contentPadding = PaddingValues(8.dp),
             ) {
-                items(userList) { data ->
-                    val rawId = data.url
-                        ?.trimEnd('/')
-                        ?.split("/")
-                        ?.lastOrNull()
-                        ?.toIntOrNull()
-
-                    val idText = String.format("%03d", rawId ?: 0)
-                    val imageUrl =
-                        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$rawId.png"
-
-                    PokemonCard(
-                        modifier = Modifier.padding(8.dp),
-                        name = data.name.orEmpty().replaceFirstChar { it.uppercaseChar() },
-                        id = idText,
-                        image = imageUrl
-                    )
-                }
+//                items(userList) { data ->
+//                    val rawId = data.url
+//                        ?.trimEnd('/')
+//                        ?.split("/")
+//                        ?.lastOrNull()
+//                        ?.toIntOrNull()
+//
+//                    val idText = String.format("%03d", rawId ?: 0)
+//                    val imageUrl =
+//                        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$rawId.png"
+//
+//                    PokemonCard(
+//                        modifier = Modifier.padding(8.dp),
+//                        name = data.name.orEmpty().replaceFirstChar { it.uppercaseChar() },
+//                        id = idText,
+//                        image = imageUrl
+//                    )
+//                }
             }
         }
     }
-
 }
 
 
