@@ -32,6 +32,13 @@ class AppDatastore(
         }
     }
 
+    suspend fun setLogout() {
+        context.dataStore.edit { prefs ->
+            prefs[USER_UUID] = ""
+            prefs[IS_LOGGED_IN] = false
+        }
+    }
+
     val isLoggedInFlow: Flow<Boolean> = context.dataStore.data
         .map { prefs ->
             !prefs[USER_UUID].isNullOrEmpty() && prefs[IS_LOGGED_IN] ?: false

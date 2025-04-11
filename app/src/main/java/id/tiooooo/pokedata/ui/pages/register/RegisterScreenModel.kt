@@ -1,108 +1,108 @@
 package id.tiooooo.pokedata.ui.pages.register
 
-import cafe.adriel.voyager.core.model.ScreenModel
-import cafe.adriel.voyager.core.model.screenModelScope
-import id.tiooooo.pokedata.data.implementation.local.entity.UserEntity
-import id.tiooooo.pokedata.data.implementation.repository.UserTempRepository
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
-import java.util.UUID
+import id.tiooooo.pokedata.base.BaseScreenModel
+import id.tiooooo.pokedata.data.api.repository.UserRepository
 
 class RegisterScreenModel(
-    private val userTempRepository: UserTempRepository
-) : ScreenModel {
+    private val userRepository: UserRepository,
+) : BaseScreenModel<RegisterState, RegisterIntent, RegisterEffect>(RegisterState()) {
 
-    private val _state = MutableStateFlow(RegisterState())
-    val state = _state.asStateFlow()
-
-    fun onEmailChanged(email: String) {
-        _state.update { it.copy(email = email) }
-    }
-
-    fun onPasswordChanged(password: String) {
-        _state.update { it.copy(password = password) }
-    }
-
-    fun onConfirmPasswordChanged(confirmPassword: String) {
-        _state.update { it.copy(confirmPassword = confirmPassword) }
-    }
-
-    private val _effect = MutableSharedFlow<RegisterEffect>()
-    val effect: SharedFlow<RegisterEffect> = _effect
-
-
-    fun validatePassword() {
-        val current = state.value
-        if (current.password != current.confirmPassword) {
-            _state.update {
-                it.copy(
-                    errorMessage = "Password tidak cocok",
-                    isButtonEnable = false
-                )
+    override fun reducer(state: RegisterState, intent: RegisterIntent): RegisterState {
+        return when (intent) {
+            is RegisterIntent.UpdateEmail -> {
+                val error = if (intent.value.isBlank()) "Email tidak boleh kosong" else ""
+                state.copy(email = intent.value, emailError = error)
             }
-            return
-        }
-        _state.update {
-            it.copy(isButtonEnable = true)
+
+            is RegisterIntent.UpdateName -> {
+                val error = if (intent.value.isBlank()) "Nama tidak boleh kosong" else ""
+                state.copy(name = intent.value, nameError = error)
+            }
+
+            is RegisterIntent.UpdatePassword -> state
+            is RegisterIntent.UpdateRePassword -> state
+            is RegisterIntent.ExecuteRegister -> state.copy(isLoading = true)
         }
     }
 
-    fun register() {
+    override suspend fun handleIntentSideEffect(intent: RegisterIntent) {
+        val currentState = state.value
+
+        fun String.validateNotEmpty(fieldName: String): String? =
+            if (isBlank()) "$fieldName tidak boleh kosong" else null
+
+        fun validatePasswordMatch(): String? =
+            if (currentState.password != currentState.confirmPassword) "Password tidak sama" else null
+
+        when (intent) {
+            is RegisterIntent.UpdatePassword -> {
+                val error = intent.value.validateNotEmpty("Password")
+                setState {
+                    it.copy(password = intent.value, passwordError = error.orEmpty())
+                }
+                validatePasswordFields()
+            }
+
+            is RegisterIntent.UpdateRePassword -> {
+                val error = intent.value.validateNotEmpty("Password")
+                setState {
+                    it.copy(confirmPassword = intent.value, confirmPasswordError = error.orEmpty())
+                }
+                validatePasswordFields()
+            }
+
+            is RegisterIntent.ExecuteRegister -> {
+                val emailError = currentState.email.validateNotEmpty("Email")
+                val nameError = currentState.name.validateNotEmpty("Nama")
+                val passwordError = currentState.password.validateNotEmpty("Password")
+                val confirmPasswordError = currentState.confirmPassword.validateNotEmpty("Password")
+                val mismatchError = validatePasswordMatch()
+
+                if (emailError != null || nameError != null || passwordError != null || confirmPasswordError != null || mismatchError != null) {
+                    setState {
+                        it.copy(
+                            isLoading = false,
+                            emailError = emailError.orEmpty(),
+                            nameError = nameError.orEmpty(),
+                            passwordError = passwordError ?: mismatchError.orEmpty(),
+                            confirmPasswordError = confirmPasswordError ?: mismatchError.orEmpty(),
+                        )
+                    }
+                    return
+                }
+
+                setState { it.copy(isLoading = true) }
+
+                userRepository.executeRegister(
+                    currentState.email.trim(),
+                    currentState.password.trim(),
+                    currentState.name.trim()
+                ).collect { result ->
+                    if (result) {
+                        sendEffect(RegisterEffect.NavigateToLogin)
+                    } else {
+                        sendEffect(RegisterEffect.ShowError("Registrasi gagal"))
+                        setState { it.copy(isLoading = false) }
+                    }
+                }
+            }
+
+            else -> Unit
+        }
+    }
+
+    private fun validatePasswordFields() {
         val current = state.value
-        screenModelScope.launch {
-            _state.update { it.copy(isLoading = true, errorMessage = null, isButtonEnable = false) }
+        val mismatchError =
+            if (current.password != current.confirmPassword) "Password tidak sama" else null
 
-            val isEmailUsed = userTempRepository.getUserByEmail(current.email)
-            if (isEmailUsed != null) {
-                _state.update {
-                    it.copy(
-                        isLoading = false,
-                        isButtonEnable = true,
-                        errorMessage = "Email sudah digunakan"
-                    )
-                }
-                return@launch
-            }
-
-
-            try {
-                val userEntity = UserEntity(
-                    uuid = UUID.randomUUID().toString(),
-                    email = current.email,
-                    password = current.password,
-                    username = "Pikachu"
-                )
-                userTempRepository.register(userEntity)
-                _state.update { it.copy(isLoading = false, isButtonEnable = true) }
-                _effect.emit(RegisterEffect.NavigateToLogin)
-
-            } catch (e: Exception) {
-                _state.update {
-                    it.copy(
-                        isLoading = false,
-                        errorMessage = "Terjadi kesalahan saat registrasi"
-                    )
-                }
-            }
+        setState {
+            it.copy(
+                confirmPasswordError = mismatchError.orEmpty()
+            )
         }
     }
 }
 
-sealed interface RegisterEffect {
-    data object NavigateToLogin : RegisterEffect
-    data class ShowError(val message: String) : RegisterEffect
-}
 
 
-data class RegisterState(
-    val email: String = "",
-    val password: String = "",
-    val confirmPassword: String = "",
-    val isLoading: Boolean = false,
-    val isButtonEnable: Boolean = false,
-    val errorMessage: String? = null
-)

@@ -39,8 +39,8 @@ import coil.compose.AsyncImage
 import id.tiooooo.pokedata.R
 import id.tiooooo.pokedata.base.BaseScaffold
 import id.tiooooo.pokedata.ui.component.AnimatedPreloader
+import id.tiooooo.pokedata.ui.pages.dashboard.DashboardRoute
 import id.tiooooo.pokedata.ui.pages.login.LoginRoute
-import id.tiooooo.pokedata.ui.pages.register.RegisterRoute
 import id.tiooooo.pokedata.ui.theme.EXTRA_LARGE_PADDING
 import id.tiooooo.pokedata.ui.theme.MEDIUM_PADDING
 import id.tiooooo.pokedata.ui.theme.SMALL_PADDING
@@ -61,8 +61,8 @@ fun SplashScreen(
         screenModel.dispatch(SplashIntent.CheckLogin)
         screenModel.effect.collect { effect ->
             when (effect) {
-                SplashEffect.NavigateToHome -> navigator.replaceAll(RegisterRoute())
-                SplashEffect.NavigateToLogin -> navigator.replaceAll(LoginRoute())
+                SplashEffect.NavigateToHome -> navigator.replace(DashboardRoute())
+                SplashEffect.NavigateToLogin -> navigator.replace(LoginRoute())
             }
         }
     }

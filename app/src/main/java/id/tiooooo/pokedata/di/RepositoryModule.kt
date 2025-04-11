@@ -9,5 +9,5 @@ import org.koin.dsl.module
 val repositoryModule = module {
     single { UserTempRepository(get()) }
     single { PokemonRepository(get()) }
-    single<UserRepository> { UserRepositoryImpl(get()) }
+    single<UserRepository> { UserRepositoryImpl(get(), get(), get()) }
 }

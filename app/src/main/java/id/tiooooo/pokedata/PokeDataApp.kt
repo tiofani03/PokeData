@@ -1,6 +1,7 @@
 package id.tiooooo.pokedata
 
 import android.app.Application
+import id.tiooooo.pokedata.di.commonModule
 import id.tiooooo.pokedata.di.localModule
 import id.tiooooo.pokedata.di.networkModule
 import id.tiooooo.pokedata.di.repositoryModule
@@ -17,6 +18,7 @@ class PokeDataApp : Application() {
                 listOf(
                     localModule,
                     networkModule,
+                    commonModule,
                     repositoryModule,
                     screenModelModule,
                 )
