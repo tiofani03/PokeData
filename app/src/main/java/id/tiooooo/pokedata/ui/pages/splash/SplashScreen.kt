@@ -46,6 +46,7 @@ import id.tiooooo.pokedata.ui.theme.MEDIUM_PADDING
 import id.tiooooo.pokedata.ui.theme.SMALL_PADDING
 import id.tiooooo.pokedata.ui.theme.textMedium12
 import id.tiooooo.pokedata.ui.theme.textMedium20
+import id.tiooooo.pokedata.utils.AppConstants
 import id.tiooooo.pokedata.utils.ColorCache
 import id.tiooooo.pokedata.utils.PaletteGenerator
 
@@ -102,7 +103,7 @@ fun SplashScreen(
                         .wrapContentWidth()
                         .padding(horizontal = EXTRA_LARGE_PADDING)
                         .align(Alignment.CenterHorizontally),
-                    text = "Cari dan temukan pokemon bersama",
+                    text = stringResource(R.string.text_splash_subtitle),
                     style = textMedium12().copy(
                         fontWeight = FontWeight.Light,
                         color = Color.White,
@@ -115,7 +116,7 @@ fun SplashScreen(
                     .wrapContentWidth()
                     .padding(bottom = paddingValues.calculateBottomPadding() + MEDIUM_PADDING)
                     .align(Alignment.BottomCenter),
-                text = "Versi 1.0.0",
+                text = "Versi ${AppConstants.APP_VERSION}",
                 style = textMedium12().copy(
                     fontWeight = FontWeight.Normal,
                     color = Color.White,

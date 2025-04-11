@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">PokeData</string>
+    <string name="text_splash_subtitle">Cari dan temukan pokemon bersama</string>
 </resources>
