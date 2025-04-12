@@ -5,9 +5,11 @@ import id.tiooooo.pokedata.data.implementation.local.dao.UserDao
 import id.tiooooo.pokedata.data.implementation.local.datastore.AppDatastore
 import id.tiooooo.pokedata.data.implementation.local.entity.UserEntity
 import id.tiooooo.pokedata.utils.encryptor.PasswordEncryptor
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import java.util.UUID
 
 class UserRepositoryImpl(
@@ -29,12 +31,12 @@ class UserRepositoryImpl(
         } else {
             emit(false)
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
     override suspend fun executeLogout() = flow {
         appDatastore.setLogout()
         emit(true)
-    }
+    }.flowOn(Dispatchers.IO)
 
     override suspend fun executeRegister(
         email: String,
@@ -61,7 +63,25 @@ class UserRepositoryImpl(
         appDatastore.setLoginStatus(newUUID, true)
 
         emit(true)
-    }
+    }.flowOn(Dispatchers.IO)
+
+    override suspend fun executeGetProfile(): Flow<UserEntity> = flow {
+        val userUuid = appDatastore.userUuid.first()
+        val data = userDao.getUserByUuid(userUuid)
+        if (data != null) {
+            emit(data)
+        } else {
+            emit(
+                UserEntity(
+                    id = -1,
+                    email = "",
+                    username = "",
+                    password = "",
+                    uuid = ""
+                )
+            )
+        }
+    }.flowOn(Dispatchers.IO)
 
 
 }

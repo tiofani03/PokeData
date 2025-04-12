@@ -43,4 +43,8 @@ class AppDatastore(
         .map { prefs ->
             !prefs[USER_UUID].isNullOrEmpty() && prefs[IS_LOGGED_IN] ?: false
         }
+
+    val userUuid: Flow<String> = context.dataStore.data.map { prefs ->
+        prefs[USER_UUID].orEmpty()
+    }
 }
