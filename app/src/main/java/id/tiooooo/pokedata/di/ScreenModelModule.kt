@@ -1,6 +1,7 @@
 package id.tiooooo.pokedata.di
 
 import id.tiooooo.pokedata.ui.pages.dashboard.DashboardScreenModel
+import id.tiooooo.pokedata.ui.pages.detail.DetailScreenModel
 import id.tiooooo.pokedata.ui.pages.home.HomeScreenModel
 import id.tiooooo.pokedata.ui.pages.login.LoginScreenModel
 import id.tiooooo.pokedata.ui.pages.profile.ProfileScreenModel
@@ -15,4 +16,5 @@ val screenModelModule = module {
     factory { DashboardScreenModel() }
     factory { ProfileScreenModel(get()) }
     factory { HomeScreenModel(get()) }
+    factory { DetailScreenModel(get()) }
 }

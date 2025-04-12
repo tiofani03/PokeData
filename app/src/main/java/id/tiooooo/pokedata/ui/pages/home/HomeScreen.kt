@@ -35,6 +35,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import id.tiooooo.pokedata.R
 import id.tiooooo.pokedata.base.BaseScaffold
 import id.tiooooo.pokedata.data.api.model.createDisplayId
+import id.tiooooo.pokedata.data.api.model.createDisplayName
 import id.tiooooo.pokedata.ui.component.BasicTopBarTitle
 import id.tiooooo.pokedata.ui.component.textfield.SearchTextField
 import id.tiooooo.pokedata.ui.pages.detail.DetailRoute
@@ -60,7 +61,7 @@ fun HomeScreen(
         screenModel.effect.collect{ effect ->
             when(effect){
                 is HomeEffect.NavigateToDetail -> {
-                    navigator.push(DetailRoute(effect.id))
+                    navigator.push(DetailRoute(effect.pokemon))
                 }
             }
         }
@@ -130,9 +131,9 @@ fun HomeScreen(
                                     indication = null,
                                     interactionSource = remember { MutableInteractionSource() }
                                 ) {
-                                    screenModel.dispatch(HomeIntent.NavigateToDetail(data.id))
+                                    screenModel.dispatch(HomeIntent.NavigateToDetail(data))
                                 },
-                            name = data.name,
+                            name = data.createDisplayName(),
                             id = data.createDisplayId(),
                             image = data.image,
                             hexColor = data.hexColor

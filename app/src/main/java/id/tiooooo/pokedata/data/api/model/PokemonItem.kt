@@ -11,3 +11,4 @@ data class PokemonItem(
 )
 
 fun PokemonItem.createDisplayId() = String.format(Locale.getDefault(), "%03d", id)
+fun PokemonItem.createDisplayName() = name.replaceFirstChar { it.uppercaseChar() }.replace("-", " ")

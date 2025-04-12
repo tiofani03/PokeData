@@ -4,12 +4,15 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
+import id.tiooooo.pokedata.data.api.model.PokemonDetail
 import id.tiooooo.pokedata.data.api.model.PokemonItem
+import id.tiooooo.pokedata.data.api.model.createPokemonDetailDefaultValue
 import id.tiooooo.pokedata.data.api.repository.PokemonRepository
 import id.tiooooo.pokedata.data.implementation.local.dao.PokemonDao
 import id.tiooooo.pokedata.data.implementation.local.datastore.AppDatastore
 import id.tiooooo.pokedata.data.implementation.local.entity.toPokemonItem
 import id.tiooooo.pokedata.data.implementation.remote.pagingsource.PokemonPagingSource
+import id.tiooooo.pokedata.data.implementation.remote.response.getEnglishDescription
 import id.tiooooo.pokedata.data.implementation.remote.response.toPokemonEntity
 import id.tiooooo.pokedata.data.implementation.remote.response.toPokemonItem
 import id.tiooooo.pokedata.data.implementation.remote.service.PokeService
@@ -76,4 +79,28 @@ class PokemonRepositoryImpl(
     override suspend fun updatePokemonBackgroundColor(color: String, id: Int) {
         pokeDao.updatePokemonColor(id, color)
     }
+
+    override fun getPokemonDetail(pokemonItem: PokemonItem): Flow<PokemonDetail> =
+        flow {
+            try {
+                val pokemonDetailResponse = pokeService.getPokemonAbilities(pokemonItem.id)
+                val abilities = pokemonDetailResponse.abilities?.map { it.ability.name.orEmpty() }
+                    ?: emptyList()
+
+                val pokemonSpeciesResponse = pokeService.getPokemonDescription(pokemonItem.id)
+                val description = pokemonSpeciesResponse.getEnglishDescription()
+
+                val pokemonDetail = PokemonDetail(
+                    name = pokemonItem.name,
+                    imageUrl = pokemonItem.image,
+                    abilities = abilities,
+                    description = description.orEmpty(),
+                )
+                emit(pokemonDetail)
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                emit(createPokemonDetailDefaultValue())
+            }
+        }.flowOn(Dispatchers.IO)
 }
