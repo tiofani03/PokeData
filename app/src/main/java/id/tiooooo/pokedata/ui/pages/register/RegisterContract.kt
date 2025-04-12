@@ -24,5 +24,5 @@ sealed interface RegisterIntent {
     data class UpdateEmail(val value: String) : RegisterIntent
     data class UpdateName(val value: String) : RegisterIntent
     data class UpdatePassword(val value: String) : RegisterIntent
-    data class UpdateRePassword(val value: String) : RegisterIntent
+    data class UpdateConfirmPassword(val value: String) : RegisterIntent
 }

@@ -18,11 +18,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import id.tiooooo.pokedata.base.BaseScaffold
+import id.tiooooo.pokedata.ui.component.textfield.PasswordTextField
 import id.tiooooo.pokedata.ui.pages.dashboard.DashboardRoute
 import id.tiooooo.pokedata.ui.pages.register.RegisterRoute
 import id.tiooooo.pokedata.ui.theme.MEDIUM_PADDING
@@ -38,7 +38,10 @@ fun LoginScreen(
     LaunchedEffect(Unit) {
         screenModel.effect.collect { effect ->
             when (effect) {
-                LoginEffect.NavigateToHome -> { navigator.replaceAll(DashboardRoute()) }
+                LoginEffect.NavigateToHome -> {
+                    navigator.replaceAll(DashboardRoute())
+                }
+
                 LoginEffect.NavigateToRegister -> navigator.push(RegisterRoute())
             }
         }
@@ -62,12 +65,10 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            OutlinedTextField(
+            PasswordTextField(
+                label = "Password",
                 value = state.password,
                 onValueChange = { screenModel.dispatch(LoginIntent.UpdatePassword(it)) },
-                label = { Text("Password") },
-                visualTransformation = PasswordVisualTransformation(),
-                modifier = Modifier.fillMaxWidth()
             )
 
             if (state.error != null) {

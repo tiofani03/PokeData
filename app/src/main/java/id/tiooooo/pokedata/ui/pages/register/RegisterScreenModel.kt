@@ -20,7 +20,7 @@ class RegisterScreenModel(
             }
 
             is RegisterIntent.UpdatePassword -> state
-            is RegisterIntent.UpdateRePassword -> state
+            is RegisterIntent.UpdateConfirmPassword -> state
             is RegisterIntent.ExecuteRegister -> state.copy(isLoading = true)
         }
     }
@@ -43,7 +43,7 @@ class RegisterScreenModel(
                 validatePasswordFields()
             }
 
-            is RegisterIntent.UpdateRePassword -> {
+            is RegisterIntent.UpdateConfirmPassword -> {
                 val error = intent.value.validateNotEmpty("Password")
                 setState {
                     it.copy(confirmPassword = intent.value, confirmPasswordError = error.orEmpty())

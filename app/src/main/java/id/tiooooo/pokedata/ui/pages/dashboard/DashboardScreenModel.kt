@@ -1,39 +1,39 @@
 package id.tiooooo.pokedata.ui.pages.dashboard
 
-import id.tiooooo.pokedata.base.BaseScreenModel
-import id.tiooooo.pokedata.data.api.repository.UserRepository
+import cafe.adriel.voyager.core.model.ScreenModel
+import id.tiooooo.pokedata.R
+import id.tiooooo.pokedata.ui.component.bottomNavigation.BottomNavModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
-class DashboardScreenModel(
-    private val userRepository: UserRepository,
-) : BaseScreenModel<DashboardState, DashboardIntent, DashboardEffect>(
-    initialState = DashboardState()
-) {
-    override fun reducer(state: DashboardState, intent: DashboardIntent): DashboardState {
-        return when (intent) {
-            is DashboardIntent.ExecuteLogout -> state
-        }
-    }
+class DashboardScreenModel : ScreenModel {
+    val bottomNavList = MutableStateFlow(
+        listOf(
+            BottomNavModel(
+                iconNotSelected = R.drawable.ic_menu_home_not_selected,
+                iconSelected = R.drawable.ic_menu_home_selected,
+                label = "Home",
+                slug = BottomNavTarget.HOME,
+            ),
+            BottomNavModel(
+                iconNotSelected = R.drawable.ic_menu_profile_not_selected,
+                iconSelected = R.drawable.ic_menu_profile_selected,
+                label = "Profile",
+                slug = BottomNavTarget.PROFILE,
+            ),
+        )
+    ).asStateFlow()
 
-    override suspend fun handleIntentSideEffect(intent: DashboardIntent) {
-        when (intent) {
-            is DashboardIntent.ExecuteLogout -> {
-                userRepository.executeLogout().collect {
-                    if (it) sendEffect(DashboardEffect.NavigateToLogin)
-                }
-            }
-        }
+    private val _bottomSheetPosition = MutableStateFlow(BottomNavTarget.HOME)
+    val bottomSheetPosition: StateFlow<String> = _bottomSheetPosition
+
+    fun updateBottomSheetPosition(positionPath: String) {
+        _bottomSheetPosition.value = positionPath
     }
 }
 
-sealed interface DashboardEffect {
-    data object NavigateToLogin : DashboardEffect
-}
-
-data class DashboardState(
-    val isLoading: Boolean = false,
-    val error: String? = null,
-)
-
-sealed interface DashboardIntent {
-    data object ExecuteLogout : DashboardIntent
+object BottomNavTarget {
+    const val HOME = "home"
+    const val PROFILE = "profile"
 }
