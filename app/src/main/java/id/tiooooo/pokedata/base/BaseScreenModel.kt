@@ -17,6 +17,8 @@ abstract class BaseScreenModel<STATE, INTENT, EFFECT>(
     private val _state = MutableStateFlow(initialState)
     val state: StateFlow<STATE> = _state.asStateFlow()
 
+    val getCurrentState = state.value
+
     private val _effect = Channel<EFFECT>(Channel.BUFFERED)
     val effect = _effect.receiveAsFlow()
 

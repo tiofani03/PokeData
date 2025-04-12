@@ -52,7 +52,7 @@ class HomeScreenModel(
             }
 
             is HomeIntent.NavigateToDetail -> {
-                sendEffect(HomeEffect.NavigateToDetail(intent.id))
+                sendEffect(HomeEffect.NavigateToDetail(intent.pokemon))
             }
 
             else -> Unit

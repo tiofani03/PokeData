@@ -4,13 +4,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.koin.koinScreenModel
+import id.tiooooo.pokedata.data.api.model.PokemonItem
 
 class DetailRoute(
-    val id: Int,
+    private val pokemonItem: PokemonItem,
 ) : Screen {
 
     @Composable
     override fun Content() {
-        DetailScreen(modifier = Modifier.fillMaxSize(), id)
+        DetailScreen(
+            modifier = Modifier.fillMaxSize(),
+            pokemonItem = pokemonItem,
+            homeScreenModel = koinScreenModel(),
+            screenModel = koinScreenModel(),
+        )
     }
 }
