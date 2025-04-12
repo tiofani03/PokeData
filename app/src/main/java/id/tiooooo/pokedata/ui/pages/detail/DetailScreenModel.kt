@@ -17,9 +17,10 @@ class DetailScreenModel(
     override suspend fun handleIntentSideEffect(intent: DetailIntent) {
         when (intent) {
             is DetailIntent.GetPokemonDetail -> {
+                val currentState = state.value
                 pokemonRepository.getPokemonDetail(pokemonItem = intent.pokemon).collect { detail ->
                     setState {
-                        getCurrentState.copy(
+                        currentState.copy(
                             pokemonDetail = detail
                         )
                     }
