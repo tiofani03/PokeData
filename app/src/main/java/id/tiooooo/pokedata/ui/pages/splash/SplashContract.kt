@@ -6,7 +6,7 @@ sealed interface SplashEffect {
 }
 
 data class SplashState(
-    val isLoading: Boolean = true
+    val isLoading: Boolean = true,
 )
 
 sealed interface SplashIntent {

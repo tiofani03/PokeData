@@ -83,8 +83,13 @@ dependencies {
     implementation(libs.voyager.screenmodel)
     implementation(libs.voyager.koin)
 
+    // paging 3
+    implementation(libs.androidx.paging.runtime.ktx)
+    implementation(libs.androidx.paging.compose)
+
     // room
     implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.paging)
     ksp(libs.room.compiler)
 
     // test

@@ -13,5 +13,6 @@ val localModule = module {
             .build()
     }
     single { get<PokeDataDatabase>().userDao() }
+    single { get<PokeDataDatabase>().pokemonDao() }
     single { AppDatastore(get()) }
 }

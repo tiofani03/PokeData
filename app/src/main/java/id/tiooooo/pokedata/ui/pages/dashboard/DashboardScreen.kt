@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import id.tiooooo.pokedata.base.BaseScaffold
 import id.tiooooo.pokedata.ui.pages.dashboard.component.BottomNavDashboard
 import id.tiooooo.pokedata.ui.pages.home.HomeScreen
+import id.tiooooo.pokedata.ui.pages.home.HomeScreenModel
 import id.tiooooo.pokedata.ui.pages.profile.ProfileScreen
 import id.tiooooo.pokedata.ui.pages.profile.ProfileScreenModel
 
@@ -19,6 +20,7 @@ import id.tiooooo.pokedata.ui.pages.profile.ProfileScreenModel
 fun DashboardScreen(
     modifier: Modifier = Modifier,
     screenModel: DashboardScreenModel,
+    homeScreenModel: HomeScreenModel,
     profileScreenModel: ProfileScreenModel,
 ) {
     val bottomNavList by screenModel.bottomNavList.collectAsState()
@@ -37,8 +39,8 @@ fun DashboardScreen(
                     BottomNavTarget.HOME -> {
                         HomeScreen(
                             modifier = Modifier
-                                .fillMaxSize()
-                                .padding(paddingValues),
+                                .fillMaxSize(),
+                            screenModel = homeScreenModel
                         )
                     }
 

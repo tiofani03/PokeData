@@ -13,6 +13,7 @@ class DashboardRoute : Screen {
         DashboardScreen(
             modifier = Modifier.fillMaxSize(),
             screenModel = koinScreenModel(),
+            homeScreenModel = koinScreenModel(),
             profileScreenModel = koinScreenModel(),
         )
     }
