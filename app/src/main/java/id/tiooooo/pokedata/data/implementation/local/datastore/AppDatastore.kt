@@ -42,7 +42,7 @@ class AppDatastore(
 
     suspend fun setAlreadyLoaded(state: Boolean) {
         context.dataStore.edit { prefs ->
-            prefs[IS_LOGGED_IN] = state
+            prefs[IS_ALREADY_LOADED] = state
         }
     }
 
