@@ -20,6 +20,7 @@ class AppDatastore(
     companion object {
         val USER_UUID = stringPreferencesKey("USER_UUID")
         val IS_LOGGED_IN = booleanPreferencesKey("IS_LOGGED_IN")
+        val IS_ALREADY_LOADED = booleanPreferencesKey("IS_ALREADY_LOADED")
     }
 
     suspend fun setLoginStatus(
@@ -39,6 +40,12 @@ class AppDatastore(
         }
     }
 
+    suspend fun setAlreadyLoaded(state: Boolean) {
+        context.dataStore.edit { prefs ->
+            prefs[IS_LOGGED_IN] = state
+        }
+    }
+
     val isLoggedInFlow: Flow<Boolean> = context.dataStore.data
         .map { prefs ->
             !prefs[USER_UUID].isNullOrEmpty() && prefs[IS_LOGGED_IN] ?: false
@@ -47,4 +54,9 @@ class AppDatastore(
     val userUuid: Flow<String> = context.dataStore.data.map { prefs ->
         prefs[USER_UUID].orEmpty()
     }
+
+    val isAlreadyLoaded: Flow<Boolean> = context.dataStore.data
+        .map { prefs ->
+            prefs[IS_ALREADY_LOADED] ?: false
+        }
 }

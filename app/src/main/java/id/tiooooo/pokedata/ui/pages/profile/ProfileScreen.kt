@@ -52,7 +52,8 @@ fun ProfileScreen(
             ) {
                 BasicTopBarTitle(
                     modifier = Modifier
-                        .wrapContentSize(),
+                        .wrapContentSize()
+                        .padding(start = MEDIUM_PADDING),
                     title = "Profile",
                 )
 

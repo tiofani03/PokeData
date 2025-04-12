@@ -33,8 +33,7 @@ fun BasicTopBarTitle(
         )
         Text(
             modifier = Modifier
-                .align(Alignment.CenterStart)
-                .padding(start = MEDIUM_PADDING),
+                .align(Alignment.CenterStart),
             textAlign = TextAlign.Start,
             text = title,
             style = textMedium22().copy(
