@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import id.tiooooo.pokedata.utils.localization.stringRes
 
 @Composable
 fun HomeErrorMessage(message: String, onRetry: () -> Unit) {
@@ -24,7 +25,7 @@ fun HomeErrorMessage(message: String, onRetry: () -> Unit) {
         Text(text = message, color = Color.Red)
         Spacer(modifier = Modifier.height(8.dp))
         Button(onClick = onRetry) {
-            Text("Retry")
+            Text(stringRes("retry"))
         }
     }
 }

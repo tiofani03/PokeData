@@ -9,13 +9,17 @@ import androidx.compose.ui.Modifier
 fun BaseScaffold(
     modifier: Modifier = Modifier,
     bottomBar: (@Composable () -> Unit)? = null,
+    topBar: (@Composable () -> Unit)? = null,
+    snackBarHostState: (@Composable () -> Unit)? = null,
     content: @Composable (padding: PaddingValues) -> Unit,
 ) {
     Scaffold(
         modifier = modifier,
         bottomBar = {
             bottomBar?.invoke()
-        }
+        },
+        topBar = { topBar?.invoke() },
+        snackbarHost = { snackBarHostState?.invoke() }
     ) { padding ->
         content(padding)
     }

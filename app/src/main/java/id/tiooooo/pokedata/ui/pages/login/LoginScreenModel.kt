@@ -2,21 +2,21 @@ package id.tiooooo.pokedata.ui.pages.login
 
 import id.tiooooo.pokedata.base.BaseScreenModel
 import id.tiooooo.pokedata.data.api.repository.UserRepository
+import id.tiooooo.pokedata.utils.localization.LocalizationManager
 
 class LoginScreenModel(
     private val userRepository: UserRepository,
+    private val localizationManager: LocalizationManager,
 ) : BaseScreenModel<LoginState, LoginIntent, LoginEffect>(
     initialState = LoginState()
 ) {
     override fun reducer(state: LoginState, intent: LoginIntent): LoginState {
         return when (intent) {
             is LoginIntent.UpdateEmail -> {
-                validateButton()
                 state.copy(email = intent.value)
             }
 
             is LoginIntent.UpdatePassword -> {
-                validateButton()
                 state.copy(password = intent.value)
             }
 
@@ -27,8 +27,9 @@ class LoginScreenModel(
 
     private fun validateButton() {
         val currentState = state.value
-        if (currentState.email.isEmpty() && currentState.password.isEmpty()) {
+        if (currentState.email.isEmpty() || currentState.password.isEmpty()) {
             setState { currentState.copy(isButtonEnable = false) }
+            return
         }
         setState { currentState.copy(isButtonEnable = true) }
     }
@@ -42,13 +43,17 @@ class LoginScreenModel(
                 userRepository.executeLogin(email, password).collect { isUserFound ->
                     if (isUserFound) {
                         sendEffect(LoginEffect.NavigateToHome)
-                    }
-                    else setState {
-                        it.copy(
-                            isLoading = false,
-                            error = "Email atau password salah"
+                    } else {
+                        sendEffect(
+                            LoginEffect.ShowErrorMessage(
+                                localizationManager.getString("wrong_email_or_password")
+                            )
                         )
                     }
+                }
+
+                setState {
+                    state.value.copy(isLoading = false)
                 }
             }
 
@@ -56,7 +61,9 @@ class LoginScreenModel(
                 sendEffect(LoginEffect.NavigateToRegister)
             }
 
-            else -> Unit
+            is LoginIntent.UpdateEmail, is LoginIntent.UpdatePassword -> {
+                validateButton()
+            }
         }
     }
 }

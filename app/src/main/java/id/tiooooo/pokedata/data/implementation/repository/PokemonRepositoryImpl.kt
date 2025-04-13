@@ -6,7 +6,6 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import id.tiooooo.pokedata.data.api.model.PokemonDetail
 import id.tiooooo.pokedata.data.api.model.PokemonItem
-import id.tiooooo.pokedata.data.api.model.createPokemonDetailDefaultValue
 import id.tiooooo.pokedata.data.api.repository.PokemonRepository
 import id.tiooooo.pokedata.data.implementation.local.dao.PokemonDao
 import id.tiooooo.pokedata.data.implementation.local.datastore.AppDatastore
@@ -16,6 +15,8 @@ import id.tiooooo.pokedata.data.implementation.remote.response.getEnglishDescrip
 import id.tiooooo.pokedata.data.implementation.remote.response.toPokemonEntity
 import id.tiooooo.pokedata.data.implementation.remote.response.toPokemonItem
 import id.tiooooo.pokedata.data.implementation.remote.service.PokeService
+import id.tiooooo.pokedata.utils.AppConstants.POKEMON_MAX_DATA
+import id.tiooooo.pokedata.utils.wrapper.ResultState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -67,7 +68,7 @@ class PokemonRepositoryImpl(
 
     override suspend fun refreshFromNetwork(shouldRefresh: Boolean) {
         if (shouldRefresh && pokeDao.countPokemon() == 0 && !appDatastore.isAlreadyLoaded.first()) {
-            val response = pokeService.getPokemon(limit = 1302, offset = 0)
+            val response = pokeService.getPokemon(limit = POKEMON_MAX_DATA, offset = 0)
             val list = response.data?.map { it.toPokemonEntity() } ?: emptyList()
 
             pokeDao.clearAll()
@@ -80,9 +81,10 @@ class PokemonRepositoryImpl(
         pokeDao.updatePokemonColor(id, color)
     }
 
-    override fun getPokemonDetail(pokemonItem: PokemonItem): Flow<PokemonDetail> =
+    override fun getPokemonDetail(pokemonItem: PokemonItem) =
         flow {
             try {
+                emit(ResultState.Loading)
                 val pokemonDetailResponse = pokeService.getPokemonAbilities(pokemonItem.id)
                 val abilities = pokemonDetailResponse.abilities?.map { it.ability.name.orEmpty() }
                     ?: emptyList()
@@ -96,11 +98,11 @@ class PokemonRepositoryImpl(
                     abilities = abilities,
                     description = description.orEmpty(),
                 )
-                emit(pokemonDetail)
+                emit(ResultState.Success(pokemonDetail))
 
             } catch (e: Exception) {
                 e.printStackTrace()
-                emit(createPokemonDetailDefaultValue())
+                emit(ResultState.Error(e.stackTrace.toString()))
             }
         }.flowOn(Dispatchers.IO)
 }
