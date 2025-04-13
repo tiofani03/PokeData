@@ -13,13 +13,13 @@ class DashboardScreenModel : ScreenModel {
             BottomNavModel(
                 iconNotSelected = R.drawable.ic_menu_home_not_selected,
                 iconSelected = R.drawable.ic_menu_home_selected,
-                label = "Home",
+                label = "home",
                 slug = BottomNavTarget.HOME,
             ),
             BottomNavModel(
                 iconNotSelected = R.drawable.ic_menu_profile_not_selected,
                 iconSelected = R.drawable.ic_menu_profile_selected,
-                label = "Profile",
+                label = "profile",
                 slug = BottomNavTarget.PROFILE,
             ),
         )

@@ -44,6 +44,7 @@ import id.tiooooo.pokedata.ui.pages.home.component.PokemonCard
 import id.tiooooo.pokedata.ui.theme.MEDIUM_PADDING
 import id.tiooooo.pokedata.ui.theme.textMedium14
 import id.tiooooo.pokedata.utils.AppConstants.IMAGE_DEFAULT_COLOR
+import id.tiooooo.pokedata.utils.localization.stringRes
 
 @Composable
 fun HomeScreen(
@@ -87,7 +88,7 @@ fun HomeScreen(
                     )
                     Text(
                         modifier = Modifier.fillMaxWidth(),
-                        text = "Ayo cari dan temukan bersama, kamu juga bisa cari berdasarkan nama",
+                        text = stringRes("home_desc"),
                         style = textMedium14().copy(
                             fontWeight = FontWeight.Light,
                         )
@@ -101,7 +102,7 @@ fun HomeScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(MEDIUM_PADDING),
-                    label = "Cari Pokemon",
+                    label = stringRes("search_pokemon"),
                     searchQuery = state.searchQuery,
                     onValueChange = { screenModel.dispatch(HomeIntent.UpdateSearchQuery(it)) },
                 )
@@ -115,7 +116,7 @@ fun HomeScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "Data tidak ditemukan",
+                            text = stringRes("data_not_found"),
                             style = MaterialTheme.typography.bodyLarge
                         )
                     }

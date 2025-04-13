@@ -3,6 +3,7 @@ package id.tiooooo.pokedata.ui.pages.login
 sealed interface LoginEffect {
     data object NavigateToHome : LoginEffect
     data object NavigateToRegister : LoginEffect
+    data class ShowErrorMessage(val message: String): LoginEffect
 }
 
 data class LoginState(

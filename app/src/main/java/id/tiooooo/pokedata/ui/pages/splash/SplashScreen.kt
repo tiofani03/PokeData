@@ -28,7 +28,8 @@ import id.tiooooo.pokedata.ui.theme.MEDIUM_PADDING
 import id.tiooooo.pokedata.ui.theme.SMALL_PADDING
 import id.tiooooo.pokedata.ui.theme.textMedium12
 import id.tiooooo.pokedata.ui.theme.textMedium20
-import id.tiooooo.pokedata.utils.AppConstants
+import id.tiooooo.pokedata.utils.AppConstants.APP_VERSION
+import id.tiooooo.pokedata.utils.localization.stringRes
 
 @Composable
 fun SplashScreen(
@@ -83,7 +84,7 @@ fun SplashScreen(
                         .wrapContentWidth()
                         .padding(horizontal = EXTRA_LARGE_PADDING)
                         .align(Alignment.CenterHorizontally),
-                    text = stringResource(R.string.text_splash_subtitle),
+                    text = stringRes("splash_text_subtitle"),
                     style = textMedium12().copy(
                         fontWeight = FontWeight.Light,
                         color = Color.White,
@@ -96,7 +97,7 @@ fun SplashScreen(
                     .wrapContentWidth()
                     .padding(bottom = paddingValues.calculateBottomPadding() + MEDIUM_PADDING)
                     .align(Alignment.BottomCenter),
-                text = "Versi ${AppConstants.APP_VERSION}",
+                text = stringRes("version_app", APP_VERSION),
                 style = textMedium12().copy(
                     fontWeight = FontWeight.Normal,
                     color = Color.White,

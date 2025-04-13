@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import id.tiooooo.pokedata.ui.theme.LARGE_PADDING
 import id.tiooooo.pokedata.ui.theme.textMedium10
+import id.tiooooo.pokedata.utils.localization.stringRes
 
 @Composable
 fun BottomNavItem(
@@ -68,7 +69,7 @@ fun BottomNavItem(
                 .wrapContentWidth()
                 .fillMaxWidth()
                 .align(Alignment.CenterHorizontally),
-            text = bottomNavModel.label,
+            text = stringRes(bottomNavModel.label),
             color = backgroundColor,
             style = textMedium10(),
             maxLines = 1,
