@@ -102,7 +102,7 @@ class PokemonRepositoryImpl(
 
             } catch (e: Exception) {
                 e.printStackTrace()
-                emit(ResultState.Error(e.stackTrace.toString()))
+                emit(ResultState.Error(e.message.orEmpty()))
             }
         }.flowOn(Dispatchers.IO)
 }
