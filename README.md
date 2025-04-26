@@ -121,12 +121,6 @@ Contributions are welcome!
 
 ---
 
-## 📄 License
-
-This project is licensed under the [MIT License](LICENSE)
-
----
-
 Enjoy building and exploring the world of Pokémon with **PokeData**!  
 If you have questions or suggestions, feel free to open an issue.
 
