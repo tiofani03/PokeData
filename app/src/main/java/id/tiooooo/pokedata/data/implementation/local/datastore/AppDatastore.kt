@@ -25,6 +25,7 @@ class AppDatastore(
         val IS_ALREADY_LOADED = booleanPreferencesKey("IS_ALREADY_LOADED")
         val ACTIVE_THEME = stringPreferencesKey("ACTIVE_THEME")
         val SELECTED_LANGUAGE = stringPreferencesKey("SELECTED_LANGUAGE")
+        val LANGUAGE_PACKAGE = stringPreferencesKey("LANGUAGE_PACKAGE")
     }
 
     suspend fun setLoginStatus(
@@ -62,6 +63,12 @@ class AppDatastore(
         }
     }
 
+    suspend fun setLanguagePackage(value: String) {
+        context.dataStore.edit { prefs ->
+            prefs[LANGUAGE_PACKAGE] = value
+        }
+    }
+
     val isLoggedInFlow: Flow<Boolean> = context.dataStore.data
         .map { prefs ->
             !prefs[USER_UUID].isNullOrEmpty() && prefs[IS_LOGGED_IN] ?: false
@@ -84,5 +91,10 @@ class AppDatastore(
     val selectedLanguage: Flow<String> = context.dataStore.data
         .map { prefs ->
             prefs[SELECTED_LANGUAGE] ?: AppLanguage.ENGLISH.code
+        }
+
+    val languagePackage: Flow<String> = context.dataStore.data
+        .map { prefs ->
+            prefs[LANGUAGE_PACKAGE] ?: ""
         }
 }

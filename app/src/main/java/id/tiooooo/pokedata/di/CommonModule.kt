@@ -7,5 +7,5 @@ import org.koin.dsl.module
 
 val commonModule = module {
     single<PasswordEncryptor> { Sha256PasswordEncryptor() }
-    single<LocalizationManager> { LocalizationManager(get()) }
+    single<LocalizationManager> { LocalizationManager(get(), get()) }
 }
