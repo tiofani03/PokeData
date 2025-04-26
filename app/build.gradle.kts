@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -60,6 +61,10 @@ dependencies {
     // coil
     implementation(libs.coil.compose)
 
+    // firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+
     // Retrofit
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
@@ -90,6 +95,7 @@ dependencies {
     // room
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.paging)
+    implementation(libs.firebase.config.ktx)
     ksp(libs.room.compiler)
 
     // test
