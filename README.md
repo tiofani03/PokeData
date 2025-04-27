@@ -3,7 +3,7 @@
 **PokeData** is a modern Android application built with Jetpack Compose that allows users to discover and explore detailed information about Pokémon. It emphasizes clean architecture, reactive state management, and seamless user experience.
 
 
-![PokeData Banner](https://github.com/user-attachments/assets/a36a7054-ab96-45bd-9414-c33737d5e547)
+![PokeData Banner](https://github.com/user-attachments/assets/64708bb0-494f-432b-a8d9-2ebe8378ff5a)
 
 ---
 
