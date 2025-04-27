@@ -37,5 +37,13 @@
   "theme_dark_mode": "Tema Malam",
   "description": "Deskripsi",
   "abilities": "Kemampuan",
-  "version_app": "Versi %s"
+  "version_app": "Versi %s",
+  "hp": "HP",
+  "attack": "Serangan",
+  "defense": "Pertahanan",
+  "special-attack": "Serangan Khusus",
+  "special-defense": "Pertahanan Khusus",
+  "speed": "Kecepatan",
+  "accuracy": "Akurasi",
+  "evasion": "Penghindaran"
 }

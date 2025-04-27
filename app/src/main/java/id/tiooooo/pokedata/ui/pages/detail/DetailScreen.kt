@@ -2,22 +2,21 @@ package id.tiooooo.pokedata.ui.pages.detail
 
 import android.content.Context
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,11 +25,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -38,16 +35,17 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import coil.compose.AsyncImage
 import id.tiooooo.pokedata.data.api.model.PokemonItem
 import id.tiooooo.pokedata.data.api.model.createDisplayId
-import id.tiooooo.pokedata.data.api.model.createDisplayName
-import id.tiooooo.pokedata.ui.pages.detail.component.DetailAppBar
+import id.tiooooo.pokedata.ui.pages.detail.component.DetailAbilitiesView
+import id.tiooooo.pokedata.ui.pages.detail.component.DetailStatisticView
+import id.tiooooo.pokedata.ui.pages.detail.component.DetailTitleAndTypeView
+import id.tiooooo.pokedata.ui.pages.detail.component.DetailEvolutionView
 import id.tiooooo.pokedata.ui.pages.home.HomeIntent
 import id.tiooooo.pokedata.ui.pages.home.HomeScreenModel
 import id.tiooooo.pokedata.ui.theme.EXTRA_LARGE_PADDING
+import id.tiooooo.pokedata.ui.theme.LARGE_PADDING
 import id.tiooooo.pokedata.ui.theme.MEDIUM_PADDING
 import id.tiooooo.pokedata.ui.theme.SMALL_PADDING
-import id.tiooooo.pokedata.ui.theme.textMedium18
 import id.tiooooo.pokedata.utils.AppConstants.IMAGE_DEFAULT_COLOR
-import id.tiooooo.pokedata.utils.localization.stringRes
 import id.tiooooo.pokedata.utils.rememberImageDominantColor
 
 @Composable
@@ -58,7 +56,6 @@ fun DetailScreen(
     homeScreenModel: HomeScreenModel,
     context: Context = LocalContext.current,
 ) {
-    val navigator = LocalNavigator.currentOrThrow
     val bgColor = if (pokemonItem.hexColor == IMAGE_DEFAULT_COLOR) {
         rememberImageDominantColor(
             id = pokemonItem.createDisplayId(),
@@ -80,41 +77,46 @@ fun DetailScreen(
     }
     Scaffold(
         modifier = modifier,
-        topBar = {
-            DetailAppBar(
-                title = pokemonItem.createDisplayName(),
-                subtitle = pokemonItem.createDisplayId(),
-            ) { navigator.pop() }
-        }
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
-                .padding(MEDIUM_PADDING)
+                .padding(bottom = paddingValues.calculateBottomPadding())
                 .verticalScroll(rememberScrollState()),
         ) {
-            Column(
+            Box(
                 modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
+                    .fillMaxWidth()
                     .background(
                         color = bgColor.copy(0.7f),
                         shape = RoundedCornerShape(SMALL_PADDING)
                     ),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
+                Spacer(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .height(72.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.background,
+                            shape = RoundedCornerShape(
+                                topStart = MEDIUM_PADDING,
+                                topEnd = MEDIUM_PADDING,
+                            )
+                        )
+                        .fillMaxWidth()
+                )
                 AsyncImage(
                     model = pokemonItem.image,
                     contentDescription = null,
                     modifier = Modifier
-                        .size(300.dp)
-                        .padding(MEDIUM_PADDING),
+                        .align(Alignment.BottomCenter)
+                        .size(450.dp)
+                        .padding(horizontal = MEDIUM_PADDING)
+                        .padding(top = MEDIUM_PADDING)
+                        .offset(y = MEDIUM_PADDING),
                     contentScale = ContentScale.Fit,
                 )
             }
-
-            Spacer(modifier = Modifier.height(EXTRA_LARGE_PADDING))
 
             if (state.isLoading) {
                 CircularProgressIndicator(
@@ -124,47 +126,52 @@ fun DetailScreen(
                 )
             } else {
                 if (state.pokemonDetail.description.isNotEmpty()) {
-                    Text(
-                        modifier = Modifier.fillMaxWidth(),
-                        text = stringRes("description"),
-                        fontWeight = FontWeight.Bold,
-                        style = textMedium18(),
+                    DetailTitleAndTypeView(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = MEDIUM_PADDING),
+                        state = state,
+                        abilitiesColor = abilitiesColor,
+                        pokemonItem = pokemonItem,
+                    )
+                    DetailEvolutionView(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = MEDIUM_PADDING),
+                        evolutionList = state.pokemonDetail.evolutionChain,
+                        bgColor = bgColor.copy(0.7f)
                     )
                     Text(
-                        text = state.pokemonDetail.description,
-                        modifier = Modifier.padding(top = SMALL_PADDING)
+                        modifier = Modifier.padding(
+                            top = MEDIUM_PADDING,
+                            start = MEDIUM_PADDING,
+                            end = MEDIUM_PADDING,
+                        ),
+                        text = state.pokemonDetail.description
+                    )
+
+                    Spacer(modifier = Modifier.height(MEDIUM_PADDING))
+
+                    DetailStatisticView(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = MEDIUM_PADDING),
+                        state = state,
+                        bgColor = bgColor,
                     )
                 }
 
                 Spacer(modifier = Modifier.height(EXTRA_LARGE_PADDING))
-                if (state.pokemonDetail.abilities.isNotEmpty()) {
-                    Text(
-                        modifier = Modifier.fillMaxWidth(),
-                        text = stringRes("abilities"),
-                        fontWeight = FontWeight.Bold,
-                        style = textMedium18(),
-                    )
-                    Row(
-                        modifier = Modifier
-                            .padding(top = SMALL_PADDING)
-                            .fillMaxWidth()
-                    ) {
-                        state.pokemonDetail.abilities.forEach {
-                            Box(
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(MEDIUM_PADDING))
-                                    .background(color = abilitiesColor)
-                                    .padding(horizontal = MEDIUM_PADDING, vertical = SMALL_PADDING)
-                            ) {
-                                Text(
-                                    text = it.replaceFirstChar { c -> c.uppercaseChar() },
-                                )
-                            }
-                            Spacer(Modifier.width(SMALL_PADDING))
-                        }
-                    }
-                }
+                DetailAbilitiesView(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = MEDIUM_PADDING),
+                    state = state,
+                    abilitiesColor = abilitiesColor,
+                )
             }
+
+            Spacer(modifier = Modifier.height(EXTRA_LARGE_PADDING))
         }
     }
 }

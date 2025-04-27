@@ -6,12 +6,15 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import id.tiooooo.pokedata.data.api.model.PokemonDetail
 import id.tiooooo.pokedata.data.api.model.PokemonItem
+import id.tiooooo.pokedata.data.api.model.Stat
 import id.tiooooo.pokedata.data.api.repository.PokemonRepository
 import id.tiooooo.pokedata.data.implementation.local.dao.PokemonDao
 import id.tiooooo.pokedata.data.implementation.local.datastore.AppDatastore
 import id.tiooooo.pokedata.data.implementation.local.entity.toPokemonItem
 import id.tiooooo.pokedata.data.implementation.remote.pagingsource.PokemonPagingSource
 import id.tiooooo.pokedata.data.implementation.remote.response.getEnglishDescription
+import id.tiooooo.pokedata.data.implementation.remote.response.getPokemonIdFromUrl
+import id.tiooooo.pokedata.data.implementation.remote.response.mapToEvolutionList
 import id.tiooooo.pokedata.data.implementation.remote.response.toPokemonEntity
 import id.tiooooo.pokedata.data.implementation.remote.response.toPokemonItem
 import id.tiooooo.pokedata.data.implementation.remote.service.PokeService
@@ -88,15 +91,32 @@ class PokemonRepositoryImpl(
                 val pokemonDetailResponse = pokeService.getPokemonAbilities(pokemonItem.id)
                 val abilities = pokemonDetailResponse.abilities?.map { it.ability.name.orEmpty() }
                     ?: emptyList()
+                val types =
+                    pokemonDetailResponse.types?.map { it.type?.name.orEmpty() } ?: emptyList()
+                val states = pokemonDetailResponse.stats?.map {
+                    Stat(
+                        name = it.stat?.name.orEmpty(),
+                        baseStat = it.baseStat ?: 0,
+                        effort = it.effort ?: 0
+                    )
+                } ?: emptyList()
+
 
                 val pokemonSpeciesResponse = pokeService.getPokemonDescription(pokemonItem.id)
                 val description = pokemonSpeciesResponse.getEnglishDescription()
+                val idEvolutionChain = getPokemonIdFromUrl(pokemonSpeciesResponse.evolutionChains?.url.orEmpty())
+
+                val evolutionChainResponse = pokeService.getEvolutionChain(idEvolutionChain.toInt())
+                val evolutionChain = mapToEvolutionList(evolutionChainResponse)
 
                 val pokemonDetail = PokemonDetail(
                     name = pokemonItem.name,
                     imageUrl = pokemonItem.image,
                     abilities = abilities,
                     description = description.orEmpty(),
+                    types = types,
+                    stats = states,
+                    evolutionChain = evolutionChain,
                 )
                 emit(ResultState.Success(pokemonDetail))
 
