@@ -3,7 +3,8 @@ package id.tiooooo.pokedata.data.implementation.remote.response
 import com.google.gson.annotations.SerializedName
 
 data class PokemonSpeciesResponse(
-    @SerializedName("flavor_text_entries") val flavorTextEntries: List<FlavorTextEntryResponse>?
+    @SerializedName("flavor_text_entries") val flavorTextEntries: List<FlavorTextEntryResponse>?,
+    @SerializedName("evolution_chain") val evolutionChains: NamedApiResourceResponse?,
 )
 
 data class FlavorTextEntryResponse(

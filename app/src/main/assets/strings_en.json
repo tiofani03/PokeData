@@ -37,5 +37,13 @@
   "theme_dark_mode": "Dark Mode",
   "description": "Description",
   "abilities": "Abilities",
-  "version_app": "Version %s"
+  "version_app": "Version %s",
+  "hp": "HP",
+  "attack": "Attack",
+  "defense": "Defense",
+  "special-attack": "Special Attack",
+  "special-defense": "Special Defense",
+  "speed": "Speed",
+  "accuracy": "Accuracy",
+  "evasion": "Evasion"
 }

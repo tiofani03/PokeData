@@ -1,5 +1,6 @@
 package id.tiooooo.pokedata.data.implementation.remote.service
 
+import id.tiooooo.pokedata.data.implementation.remote.response.EvolutionChainContainerResponse
 import id.tiooooo.pokedata.data.implementation.remote.response.ListResponse
 import id.tiooooo.pokedata.data.implementation.remote.response.PokemonDetailAbilitiesResponse
 import id.tiooooo.pokedata.data.implementation.remote.response.PokemonItemResponse
@@ -24,5 +25,10 @@ interface PokeService {
     suspend fun getPokemonDescription(
         @Path("id") id: Int
     ): PokemonSpeciesResponse
+
+    @GET("api/v2/evolution-chain/{id}")
+    suspend fun getEvolutionChain(
+        @Path("id") id: Int
+    ): EvolutionChainContainerResponse
 
 }
