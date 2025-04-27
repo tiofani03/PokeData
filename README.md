@@ -10,7 +10,7 @@
 ## 📱 Overview
 
 PokeData is designed with a strong focus on modern Android development practices. It showcases the use of reactive UI with **Jetpack Compose**, **MVI architecture**, and **Redux-like state management**. The app also supports **dynamic theming** and **localization**, making it accessible and customizable for all users.
-[Download APK](https://drive.google.com/file/d/14ecRboXzgKmclk_0Nqq2IanAAsdUjJqq/view?usp=sharing)
+[Download APK](https://drive.google.com/file/d/14ecRboXzgKmclk_0Nqq2IanAAsdUjJqq/view?usp=drive_link)
 
 ---
 
@@ -93,7 +93,7 @@ Preferences are stored with **DataStore** and applied app-wide.
 
 | Home | Detail | Settings |
 |------|---------|----------|
-| ![](https://github.com/user-attachments/assets/96161602-851a-4439-9da1-4f2261e19dec) | ![](https://github.com/user-attachments/assets/a2171bf2-9154-4c42-8867-ae814ae8acec) | ![](https://github.com/user-attachments/assets/5844aa7f-b460-4ddd-b9b2-702a00c67bb9) |
+| ![](https://github.com/user-attachments/assets/f7259ff1-8ca2-4ab3-bac7-c65dc874b01a) | ![](https://github.com/user-attachments/assets/ae2a8673-4061-4c10-919f-88d56aa9f6f2) | ![](https://github.com/user-attachments/assets/1fe87b60-c7c3-4b90-bb1d-88f67535fa7a) |
 
 ---
 
