@@ -39,20 +39,20 @@ class SplashScreenModel(
                 }
                 remoteConfig.setConfigSettingsAsync(configSettings).await()
 
-                try {
-                    remoteConfig.fetchAndActivate().await()
-                    val languagePack = remoteConfig.getString("language_pack")
-                    appDatastore.setLanguagePackage(languagePack)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
+//                try {
+//                    remoteConfig.fetchAndActivate().await()
+//                    val languagePack = remoteConfig.getString("language_pack")
+//                    appDatastore.setLanguagePackage(languagePack)
+//                } catch (e: Exception) {
+//                    e.printStackTrace()
+//                }
 
-                appDatastore.selectedLanguage
-                    .map { it.ifEmpty { "en" } }
-                    .distinctUntilChanged()
-                    .firstOrNull()?.let { lang ->
-                        localizationManager.loadLanguage(lang)
-                    }
+//                appDatastore.selectedLanguage
+//                    .map { it.ifEmpty { "en" } }
+//                    .distinctUntilChanged()
+//                    .firstOrNull()?.let { lang ->
+//                        localizationManager.loadLanguage(lang)
+//                    }
                 handleNavigate(isLoggedIn)
             }
         }

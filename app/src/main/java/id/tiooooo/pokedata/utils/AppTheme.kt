@@ -43,6 +43,15 @@ fun rememberAppTheme(appDatastore: AppDatastore): Boolean {
 }
 
 @Composable
+fun rememberSelectedLanguage(
+    appDatastore: AppDatastore
+): String {
+    return appDatastore.selectedLanguage
+        .collectAsState(initial = AppLanguage.ENGLISH.code)
+        .value
+}
+
+@Composable
 fun SetupStatusBarAppearance(darkTheme: Boolean) {
     val view = LocalView.current
     SideEffect {

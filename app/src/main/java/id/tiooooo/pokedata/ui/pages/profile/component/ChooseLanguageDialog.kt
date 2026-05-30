@@ -19,16 +19,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
+import com.localflow.sdk.Localflow
+import com.localflow.sdk.data.model.LanguageInfo
 import id.tiooooo.pokedata.ui.theme.EXTRA_SMALL_PADDING
 import id.tiooooo.pokedata.ui.theme.MEDIUM_PADDING
-import id.tiooooo.pokedata.utils.AppLanguage
 import id.tiooooo.pokedata.utils.localization.stringRes
 
 @Composable
 fun ChooseLanguageDialog(
-    currentLanguage: AppLanguage,
+    currentLanguage: LanguageInfo,
     onDismiss: () -> Unit,
-    onConfirm: (AppLanguage) -> Unit
+    onConfirm: (LanguageInfo) -> Unit
 ) {
     var selectedLanguage by remember { mutableStateOf(currentLanguage) }
 
@@ -47,7 +48,7 @@ fun ChooseLanguageDialog(
         title = { Text(stringRes("setting_choose_language")) },
         text = {
             Column {
-                AppLanguage.entries.forEach { language ->
+                Localflow.getAvailableLanguages().forEach { language ->
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
@@ -64,7 +65,7 @@ fun ChooseLanguageDialog(
                             onClick = null
                         )
                         Spacer(modifier = Modifier.width(MEDIUM_PADDING))
-                        Text(text = language.label)
+                        Text(text = language.name)
                     }
                 }
             }

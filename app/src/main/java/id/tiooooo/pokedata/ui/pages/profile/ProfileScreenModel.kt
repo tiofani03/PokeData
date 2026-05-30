@@ -1,33 +1,21 @@
 package id.tiooooo.pokedata.ui.pages.profile
 
 import cafe.adriel.voyager.core.model.screenModelScope
+import com.localflow.sdk.Localflow
 import id.tiooooo.pokedata.base.BaseScreenModel
 import id.tiooooo.pokedata.data.api.repository.UserRepository
 import id.tiooooo.pokedata.data.implementation.local.datastore.AppDatastore
-import id.tiooooo.pokedata.utils.localization.LocalizationManager
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class ProfileScreenModel(
     private val userRepository: UserRepository,
     private val appDatastore: AppDatastore,
-    private val localizationManager: LocalizationManager,
 ) : BaseScreenModel<ProfileState, ProfileIntent, ProfileEffect>(
     initialState = ProfileState()
 ) {
     init {
         dispatch(ProfileIntent.InitProfile)
-        screenModelScope.launch {
-            appDatastore.selectedLanguage
-                .map { it.ifEmpty { "en" } }
-                .distinctUntilChanged()
-                .collectLatest { lang ->
-                    localizationManager.loadLanguage(lang)
-                }
-        }
     }
 
     override fun reducer(state: ProfileState, intent: ProfileIntent): ProfileState {
@@ -38,6 +26,7 @@ class ProfileScreenModel(
             is ProfileIntent.UpdateLanguage -> state
             is ProfileIntent.ShowDialogTheme -> state.copy(isShowDialogTheme = intent.value)
             is ProfileIntent.ShowDialogLanguage -> state.copy(isShowDialogLanguage = intent.value)
+            is ProfileIntent.ForceSync -> state
         }
     }
 
@@ -52,7 +41,8 @@ class ProfileScreenModel(
             is ProfileIntent.InitProfile -> {
                 val currentState = state.value
                 val theme = appDatastore.activeTheme.first()
-                val selectedLanguage = appDatastore.selectedLanguage.first()
+                val selectedLanguage = Localflow.getCurrentLanguage()
+                val language = Localflow.getAvailableLanguages().find { it.code == selectedLanguage } ?: Localflow.getAvailableLanguages().first()
                 userRepository.executeGetProfile().collect { user ->
                     if (user.uuid.isNotEmpty()) {
                         setState {
@@ -61,6 +51,7 @@ class ProfileScreenModel(
                                 email = user.email,
                                 activeTheme = theme,
                                 selectedLanguage = selectedLanguage,
+                                selectedLanguageObject = language
                             )
                         }
                     } else {
@@ -80,14 +71,19 @@ class ProfileScreenModel(
             }
 
             is ProfileIntent.UpdateLanguage -> {
-                appDatastore.setSelectedLanguage(intent.value)
-                localizationManager.loadLanguage(intent.value)
+                appDatastore.setSelectedLanguage(intent.value.code)
                 val currentState = state.value
                 setState {
                     currentState.copy(
-                        selectedLanguage = intent.value
+                        selectedLanguage = intent.value.code,
+                        selectedLanguageObject = intent.value
                     )
                 }
+                Localflow.setLanguage(intent.value.code)
+            }
+
+            is ProfileIntent.ForceSync -> {
+                Localflow.forceSync()
             }
 
             else -> Unit

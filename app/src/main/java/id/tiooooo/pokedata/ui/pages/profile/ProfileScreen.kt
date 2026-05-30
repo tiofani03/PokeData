@@ -27,17 +27,15 @@ import id.tiooooo.pokedata.base.BaseScaffold
 import id.tiooooo.pokedata.ui.component.BasicTopBarTitle
 import id.tiooooo.pokedata.ui.pages.login.LoginRoute
 import id.tiooooo.pokedata.ui.pages.profile.component.ChooseLanguageDialog
+import id.tiooooo.pokedata.ui.pages.profile.component.ChooseThemeDialog
 import id.tiooooo.pokedata.ui.pages.profile.component.ProfileHeader
 import id.tiooooo.pokedata.ui.pages.profile.component.SettingItem
 import id.tiooooo.pokedata.ui.pages.profile.component.SettingItemLayout
-import id.tiooooo.pokedata.ui.pages.profile.component.ChooseThemeDialog
 import id.tiooooo.pokedata.ui.theme.MEDIUM_PADDING
 import id.tiooooo.pokedata.ui.theme.SMALL_PADDING
 import id.tiooooo.pokedata.ui.theme.textMedium12
 import id.tiooooo.pokedata.ui.theme.textMedium16
-import id.tiooooo.pokedata.utils.AppConstants
 import id.tiooooo.pokedata.utils.AppConstants.APP_VERSION
-import id.tiooooo.pokedata.utils.AppLanguage
 import id.tiooooo.pokedata.utils.AppTheme
 import id.tiooooo.pokedata.utils.localization.stringRes
 
@@ -144,11 +142,11 @@ fun ProfileScreen(
 
     if (state.isShowDialogLanguage) {
         ChooseLanguageDialog(
-            currentLanguage = AppLanguage.fromValue(state.selectedLanguage),
+            currentLanguage = state.selectedLanguageObject,
             onDismiss = { screenModel.dispatch(ProfileIntent.ShowDialogLanguage(false)) },
             onConfirm = {
                 screenModel.dispatch(ProfileIntent.ShowDialogLanguage(false))
-                screenModel.dispatch(ProfileIntent.UpdateLanguage(it.code))
+                screenModel.dispatch(ProfileIntent.UpdateLanguage(it))
             }
         )
     }

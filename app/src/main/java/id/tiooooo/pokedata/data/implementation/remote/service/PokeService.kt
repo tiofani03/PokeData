@@ -5,30 +5,50 @@ import id.tiooooo.pokedata.data.implementation.remote.response.ListResponse
 import id.tiooooo.pokedata.data.implementation.remote.response.PokemonDetailAbilitiesResponse
 import id.tiooooo.pokedata.data.implementation.remote.response.PokemonItemResponse
 import id.tiooooo.pokedata.data.implementation.remote.response.PokemonSpeciesResponse
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.get
+import io.ktor.client.request.parameter
 
 interface PokeService {
-    @GET("api/v2/pokemon")
     suspend fun getPokemon(
-        @Query("limit") limit: Int,
-        @Query("offset") offset: Int
+        limit: Int,
+        offset: Int
     ): ListResponse<List<PokemonItemResponse>>
 
-    @GET("api/v2/pokemon/{id}")
     suspend fun getPokemonAbilities(
-        @Path("id") id: Int
+        id: Int
     ): PokemonDetailAbilitiesResponse
 
-    @GET("api/v2/pokemon-species/{id}")
     suspend fun getPokemonDescription(
-        @Path("id") id: Int
+        id: Int
     ): PokemonSpeciesResponse
 
-    @GET("api/v2/evolution-chain/{id}")
     suspend fun getEvolutionChain(
-        @Path("id") id: Int
+        id: Int
     ): EvolutionChainContainerResponse
+}
 
+class PokeServiceImpl(
+    private val client: HttpClient
+) : PokeService {
+
+    override suspend fun getPokemon(limit: Int, offset: Int): ListResponse<List<PokemonItemResponse>> {
+        return client.get("api/v2/pokemon") {
+            parameter("limit", limit)
+            parameter("offset", offset)
+        }.body()
+    }
+
+    override suspend fun getPokemonAbilities(id: Int): PokemonDetailAbilitiesResponse {
+        return client.get("api/v2/pokemon/$id").body()
+    }
+
+    override suspend fun getPokemonDescription(id: Int): PokemonSpeciesResponse {
+        return client.get("api/v2/pokemon-species/$id").body()
+    }
+
+    override suspend fun getEvolutionChain(id: Int): EvolutionChainContainerResponse {
+        return client.get("api/v2/evolution-chain/$id").body()
+    }
 }

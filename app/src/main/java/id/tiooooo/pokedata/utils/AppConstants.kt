@@ -8,4 +8,8 @@ object AppConstants {
     const val IMAGE_BASE_URL = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/"
     const val IMAGE_DEFAULT_COLOR = "#808080"
     const val POKEMON_MAX_DATA = 1302
+
+    const val LOCAL_FLOW_BASE_URL = "https://localflow-1085648460092.asia-southeast2.run.app"
+    // TODO Replace with your own API key
+    const val LOCAL_FLOW_API_KEY = ""
 }
