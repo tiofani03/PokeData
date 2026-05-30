@@ -3,17 +3,14 @@ package id.tiooooo.pokedata.utils.localization
 import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalContext
-import com.google.firebase.Firebase
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
-import com.google.firebase.remoteconfig.remoteConfig
-import com.localflow.sdk.Localflow
+import com.localflow.sdk.ui.compose.localflowString
 import id.tiooooo.pokedata.data.implementation.local.datastore.AppDatastore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -102,8 +99,9 @@ fun ProvideLocalization(
 }
 
 @Composable
-fun stringRes(key: String, vararg args: Any?): String {
-    return Localflow.getString(key, args)
+@ReadOnlyComposable
+fun stringRes(key: String, vararg args: Any): String {
+    return localflowString(key, *args)
 }
 
 @Composable
