@@ -1,5 +1,6 @@
 package id.tiooooo.pokedata.ui.pages.login
 
+import com.localflow.sdk.Localflow
 import id.tiooooo.pokedata.base.BaseScreenModel
 import id.tiooooo.pokedata.data.api.repository.UserRepository
 import id.tiooooo.pokedata.utils.localization.LocalizationManager
@@ -46,7 +47,7 @@ class LoginScreenModel(
                     } else {
                         sendEffect(
                             LoginEffect.ShowErrorMessage(
-                                localizationManager.getString("wrong_email_or_password")
+                                Localflow.getString("wrong_email_or_password")
                             )
                         )
                     }

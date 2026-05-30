@@ -1,32 +1,36 @@
 package id.tiooooo.pokedata.data.implementation.remote.response
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class PokemonDetailAbilitiesResponse(
-    @SerializedName("abilities") val abilities: List<AbilitySlotResponse>?,
-    @SerializedName("types") val types: List<TypeResponse>?,
-    @SerializedName("stats") val stats: List<StatsResponse>?,
-
+    @SerialName("abilities") val abilities: List<AbilitySlotResponse>? = null,
+    @SerialName("types") val types: List<TypeResponse>? = null,
+    @SerialName("stats") val stats: List<StatsResponse>? = null,
 )
 
+@Serializable
 data class AbilitySlotResponse(
-    @SerializedName("ability")
+    @SerialName("ability")
     val ability: NamedApiResource,
 )
 
+@Serializable
 data class NamedApiResource(
-    @SerializedName("name")
-    val name: String?,
+    @SerialName("name")
+    val name: String? = null,
 )
 
+@Serializable
 data class TypeResponse(
-    @SerializedName("slot") val slot: Int?,
-    @SerializedName("type") val type: NamedApiResourceResponse?
+    @SerialName("slot") val slot: Int? = null,
+    @SerialName("type") val type: NamedApiResourceResponse? = null,
 )
 
+@Serializable
 data class StatsResponse(
-    @SerializedName("base_stat") val baseStat: Int?,
-    @SerializedName("effort") val effort: Int?,
-    @SerializedName("stat") val stat: NamedApiResourceResponse?
+    @SerialName("base_stat") val baseStat: Int? = null,
+    @SerialName("effort") val effort: Int? = null,
+    @SerialName("stat") val stat: NamedApiResourceResponse? = null,
 )
-

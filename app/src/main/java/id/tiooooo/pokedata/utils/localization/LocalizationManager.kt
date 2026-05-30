@@ -13,6 +13,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import com.google.firebase.remoteconfig.remoteConfig
+import com.localflow.sdk.Localflow
 import id.tiooooo.pokedata.data.implementation.local.datastore.AppDatastore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -20,43 +21,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.util.Locale
-
-//class LocalizationManager(private val context: Context) {
-//    private var localizedStrings: Map<String, String> = emptyMap()
-//
-//    suspend fun loadLanguage(languageCode: String) {
-//        withContext(Dispatchers.IO) {
-//            try {
-//                val fileName = "strings_${languageCode.lowercase(Locale.ROOT)}.json"
-//                val json = context.assets.open(fileName).bufferedReader().use { it.readText() }
-//                val jsonObject = JSONObject(json)
-//
-//                val map = mutableMapOf<String, String>()
-//                jsonObject.keys().forEach { key ->
-//                    map[key] = jsonObject.getString(key)
-//                }
-//
-//                localizedStrings = map
-//            } catch (e: Exception) {
-//                e.printStackTrace()
-//            }
-//        }
-//    }
-//
-//
-//    fun getString(key: String, vararg args: Any?): String {
-//        val rawString = localizedStrings[key] ?: key
-//        return try {
-//            if (args.isNotEmpty()) {
-//                String.format(rawString, *args)
-//            } else {
-//                rawString
-//            }
-//        } catch (e: Exception) {
-//            rawString
-//        }
-//    }
-//}
 
 class LocalizationManager(
     private val context: Context,
@@ -139,7 +103,7 @@ fun ProvideLocalization(
 
 @Composable
 fun stringRes(key: String, vararg args: Any?): String {
-    return LocalStrings.current.string(key, *args)
+    return Localflow.getString(key, args)
 }
 
 @Composable

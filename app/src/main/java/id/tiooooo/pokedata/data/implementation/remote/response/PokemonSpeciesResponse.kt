@@ -1,20 +1,24 @@
 package id.tiooooo.pokedata.data.implementation.remote.response
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class PokemonSpeciesResponse(
-    @SerializedName("flavor_text_entries") val flavorTextEntries: List<FlavorTextEntryResponse>?,
-    @SerializedName("evolution_chain") val evolutionChains: NamedApiResourceResponse?,
+    @SerialName("flavor_text_entries") val flavorTextEntries: List<FlavorTextEntryResponse>? = null,
+    @SerialName("evolution_chain") val evolutionChains: NamedApiResourceResponse? = null,
 )
 
+@Serializable
 data class FlavorTextEntryResponse(
-    @SerializedName("flavor_text") val flavorText: String?,
-    @SerializedName("language") val language: NamedApiResourceResponse?
+    @SerialName("flavor_text") val flavorText: String? = null,
+    @SerialName("language") val language: NamedApiResourceResponse? = null,
 )
 
+@Serializable
 data class NamedApiResourceResponse(
-    @SerializedName("name") val name: String?,
-    @SerializedName("url") val url: String?
+    @SerialName("name") val name: String? = null,
+    @SerialName("url") val url: String? = null
 )
 
 fun PokemonSpeciesResponse?.getEnglishDescription(): String? {
@@ -31,4 +35,3 @@ fun cleanFlavorText(raw: String): String {
         .replace(Regex("\\s+"), " ")
         .trim()
 }
-

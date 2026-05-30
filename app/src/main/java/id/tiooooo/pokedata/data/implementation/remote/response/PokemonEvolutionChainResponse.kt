@@ -1,24 +1,28 @@
 package id.tiooooo.pokedata.data.implementation.remote.response
 
-import com.google.gson.annotations.SerializedName
 import id.tiooooo.pokedata.data.api.model.EvolutionChain
 import id.tiooooo.pokedata.utils.AppConstants.IMAGE_BASE_URL
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class EvolutionChainContainerResponse(
-    @SerializedName("id") val id: Int,
-    @SerializedName("baby_trigger_item") val babyTriggerItem: Any?,
-    @SerializedName("chain") val chain: EvolutionChainResponse
+    @SerialName("id") val id: Int,
+    @SerialName("baby_trigger_item") val babyTriggerItem: String? = null,
+    @SerialName("chain") val chain: EvolutionChainResponse
 )
 
+@Serializable
 data class EvolutionChainResponse(
-    @SerializedName("species") val species: NamedApiResourceResponse,
-    @SerializedName("evolution_details") val evolutionDetails: List<EvolutionDetail>?,
-    @SerializedName("evolves_to") val evolvesTo: List<EvolutionChainResponse>
+    @SerialName("species") val species: NamedApiResourceResponse,
+    @SerialName("evolution_details") val evolutionDetails: List<EvolutionDetail>? = null,
+    @SerialName("evolves_to") val evolvesTo: List<EvolutionChainResponse>
 )
 
+@Serializable
 data class EvolutionDetail(
-    @SerializedName("min_level") val minLevel: Int?,
-    @SerializedName("trigger") val trigger: NamedApiResourceResponse
+    @SerialName("min_level") val minLevel: Int? = null,
+    @SerialName("trigger") val trigger: NamedApiResourceResponse
 )
 
 fun mapToEvolutionList(response: EvolutionChainContainerResponse): List<EvolutionChain> {

@@ -14,7 +14,7 @@ val screenModelModule = module {
     factory { LoginScreenModel(get(), get()) }
     factory { RegisterScreenModel(get(), get()) }
     factory { DashboardScreenModel() }
-    factory { ProfileScreenModel(get(), get(), get()) }
+    factory { ProfileScreenModel(get(), get()) }
     factory { HomeScreenModel(get()) }
     factory { DetailScreenModel(get()) }
 }
