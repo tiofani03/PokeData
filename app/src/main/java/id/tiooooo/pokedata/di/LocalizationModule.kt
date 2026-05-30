@@ -31,9 +31,10 @@ class LocalflowInitializer(
             baseUrl = AppConstants.LOCAL_FLOW_BASE_URL
         )
             .defaultLanguage(languageCode)
-            .syncIntervalMs(60_000L)
+            .syncIntervalMs(30 * 60 * 1000L)
             .enableAutoSync(true)
             .logLevel(LocalflowConfig.LogLevel.VERBOSE)
+            .fallbackAssetPath("localizations.json")
             .build()
     }
 }

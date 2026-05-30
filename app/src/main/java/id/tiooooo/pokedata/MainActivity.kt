@@ -28,7 +28,6 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val darkTheme = rememberAppTheme(appDatastore)
-            val languageCode = rememberSelectedLanguage(appDatastore)
             AppLocalflowProvider(appDatastore) {
                 LocalflowSyncEffect()
                 SetupStatusBarAppearance(darkTheme)

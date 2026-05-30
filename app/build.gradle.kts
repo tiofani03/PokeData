@@ -73,9 +73,7 @@ dependencies {
     implementation(libs.ktor.client.logging)
     implementation(libs.kotlinx.serialization.json)
 
-    implementation("com.github.tiofani03:localflow-android:v1.0.1"){
-        isChanging = true
-    }
+    implementation(libs.localflow.android)
 
     // material palette
     implementation(libs.androidx.palette.ktx)
